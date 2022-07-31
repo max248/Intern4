@@ -36,9 +36,13 @@ public class AppController {
     }
 
     @GetMapping("")
-    public String viewHomePage(Model model, HttpServletRequest request, Authentication authentication, User user){
+    public String viewHomePage(Authentication authentication){
         if(authentication != null && authentication.isAuthenticated()){
             CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+            if(!userRepository.findByEmail(customUserDetails.getUsername()).isEnabled()){
+                authentication.setAuthenticated(false);
+                return "login";
+            }
             Date date = new Date();
             userRepository.updateLastLoginDateById(customUserDetails.getUserId(),formatter.format(date));
             return "home";
@@ -55,6 +59,11 @@ public class AppController {
     @GetMapping("/list_users")
     public String viewUsersList(Authentication authentication,Model model){
         if(authentication != null && authentication.isAuthenticated()){
+            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+            if(!userRepository.findByEmail(customUserDetails.getUsername()).isEnabled()){
+                authentication.setAuthenticated(false);
+                return "login";
+            }
             List<User> userList = userRepository.findAll();
             model.addAttribute("listUser",userList);
             return "users";
@@ -64,10 +73,16 @@ public class AppController {
     }
 
     @PostMapping("/block")
-    public void blockUser(Authentication authentication,Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void blockUser(Authentication authentication, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         if(authentication != null && authentication.isAuthenticated()){
+            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+            if(!userRepository.findByEmail(customUserDetails.getUsername()).isEnabled()){
+                authentication.setAuthenticated(false);
+                response.setContentType("text/html");
+                response.getWriter().write("error");
+            }
             String block_ids = request.getParameter("id");
             boolean flag = Boolean.parseBoolean(request.getParameter("flag"));
             for (String id:block_ids.split(",")){
@@ -89,6 +104,11 @@ public class AppController {
         if(authentication != null && authentication.isAuthenticated()){
             String delete_ids = request.getParameter("id");
             CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+            if(!userRepository.findByEmail(customUserDetails.getUsername()).isEnabled()){
+                authentication.setAuthenticated(false);
+                response.setContentType("text/html");
+                response.getWriter().write("error");
+            }
             for (String id:delete_ids.split(",")){
                 userRepository.deleteById(Long.valueOf(id));
                 if(customUserDetails.getUserId() == Long.valueOf(id)){
