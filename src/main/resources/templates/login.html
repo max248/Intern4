@@ -66,8 +66,7 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xl-5 col-md-8">
-                        <div th:if="${param.error}">
-                            Invalid username and password.
+                        <div th:if="${param.error}"> Invalid username and password.
                             <label th:text="${errorMsg}"></label>
                         </div>
                         <div th:if="${param.logout}">
