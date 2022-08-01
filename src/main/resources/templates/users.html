@@ -78,7 +78,7 @@
                         <table class="table table-striped table-bordered" id="myTable">
                             <thead class="thead-dark">
                             <tr>
-                                <th style="width: 2%;"></th>
+                                <th style="width: 2%";><input type="checkbox" name="select-all" id="select-all" /></th>
                                 <th style="width: 10%;">User ID</th>
                                 <th style="width: 20%;">E-mail</th>
                                 <th style="width: 30%;">Name</th>
@@ -89,7 +89,7 @@
                             </thead>
                             <tbody id="bodyTable">
                             <tr th:each="user: ${listUser}">
-                                <td><input type="checkbox" th:value="${user.id}"></td>
+                                <td><input type="checkbox" name="checkedIds" th:value="${user.id}"></td>
                                 <td th:text="${user.id}">USER ID</td>
                                 <td th:text="${user.email}">Email</td>
                                 <td th:text="${user.fullName}">Name</td>
@@ -127,11 +127,27 @@
 </body>
 </html>
 <script>
+    $('#select-all').click(function(event) {
+        if(this.checked) {
+            // Iterate each checkbox
+            $(':checkbox').each(function() {
+                if(!this.disabled){
+                    this.checked = true;
+                }
+            });
+        } else {
+            $(':checkbox').each(function() {
+                if(!this.disabled){
+                    this.checked = false;
+                }
+            });
+        }
+    });
     $('#block').click(function() {
-        var checkedValues = $("input:checkbox:checked", "#myTable").map(function() {
-            return $(this).val();
-        }).get();
-
+        var checkedValues = [];
+        $.each($("input[name='checkedIds']:checked"), function(){
+            checkedValues.push($(this).val());
+        });
         var data = 'id=' + checkedValues + '&flag=false';
         $.ajax({
             url:"/block",
@@ -139,10 +155,10 @@
             data: data,
             success: function (response){
                 $("#myTable > tbody").html("");
-                console.log("response: " + JSON.stringify(response));
+                $('#select-all').prop('checked', false);
                 for(var i=0;i<response.length;i++){
                     $('#myTable tbody').append('<tr>' +
-                        '<td><input type="checkbox" value="'+ response[i].id +'"></td>' +
+                        '<td><input type="checkbox" name="checkedIds" value="'+ response[i].id +'"></td>' +
                         '<td>' + response[i].id + '</td>' +
                         '<td>' + response[i].email + '</td>' +
                         '<td>' + response[i].firstName + ' ' + response[i].lastName + '</td>' +
@@ -158,9 +174,10 @@
         })
     });
     $('#unblock').click(function() {
-        var checkedValues = $("input:checkbox:checked", "#myTable").map(function() {
-            return $(this).val();
-        }).get();
+        var checkedValues = [];
+        $.each($("input[name='checkedIds']:checked"), function(){
+            checkedValues.push($(this).val());
+        });
 
         var data = 'id=' + checkedValues + '&flag=true';
         $.ajax({
@@ -169,10 +186,10 @@
             data: data,
             success: function (response){
                 $("#myTable > tbody").html("");
-                console.log("response: " + JSON.stringify(response));
+                $('#select-all').prop('checked', false);
                 for(var i=0;i<response.length;i++){
                     $('#myTable tbody').append('<tr>' +
-                        '<td><input type="checkbox" value="'+ response[i].id +'"></td>' +
+                        '<td><input type="checkbox" name="checkedIds" value="'+ response[i].id +'"></td>' +
                         '<td>' + response[i].id + '</td>' +
                         '<td>' + response[i].email + '</td>' +
                         '<td>' + response[i].firstName + ' ' + response[i].lastName + '</td>' +
@@ -188,9 +205,10 @@
         })
     });
     $('#delete').click(function() {
-        var checkedValues = $("input:checkbox:checked", "#myTable").map(function() {
-            return $(this).val();
-        }).get();
+        var checkedValues = [];
+        $.each($("input[name='checkedIds']:checked"), function(){
+            checkedValues.push($(this).val());
+        });
 
         var data = 'id=' + checkedValues;
         $.ajax({
@@ -202,10 +220,10 @@
                     window.location.href = "/login";
                 } else {
                     $("#myTable > tbody").html("");
-                    console.log("response: " + JSON.stringify(response));
+                    $('#select-all').prop('checked', false);
                     for(var i=0;i<response.length;i++){
                         $('#myTable tbody').append('<tr>' +
-                            '<td><input type="checkbox" value="'+ response[i].id +'"></td>' +
+                            '<td><input type="checkbox" name="checkedIds" value="'+ response[i].id +'"></td>' +
                             '<td>' + response[i].id + '</td>' +
                             '<td>' + response[i].email + '</td>' +
                             '<td>' + response[i].firstName + ' ' + response[i].lastName + '</td>' +
