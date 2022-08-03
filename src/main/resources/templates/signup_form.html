@@ -34,6 +34,9 @@
                         <form th:action="@{/process_register}" method="post"
                               style="max-width: 600px; margin: 0 auto;"
                               th:object="${user}">
+                            <div>
+                                <label th:text="${errorMsg1}"></label>
+                            </div>
                             <div class="m-3">
                                 <div class="form-group row">
                                     <label class="col-form-label col-4">E-mail</label>
@@ -52,7 +55,7 @@
                                     <label class="col-form-label col-4">FirstName</label>
                                     <div class="col-8">
                                         <input type="text" class="form-control" th:field="*{firstName}" required
-                                               minlength="6" maxlength="15"/>
+                                               minlength="3" maxlength="15"/>
                                     </div>
                                 </div>
                                 <div class="form-group row">

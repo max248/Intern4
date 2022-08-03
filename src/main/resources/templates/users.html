@@ -110,6 +110,11 @@
             type: "POST",
             data: data,
             success: function (response){
+                console.log("response: " + response);
+                if(response == 'login'){
+                    window.location.href = "/login";
+                    return;
+                }
                 $("#myTable > tbody").html("");
                 $('#select-all').prop('checked', false);
                 for(var i=0;i<response.length;i++){
@@ -141,6 +146,11 @@
             type: "POST",
             data: data,
             success: function (response){
+                console.log("response: " + response);
+                if(response == 'login'){
+                    window.location.href = "/login";
+                    return;
+                }
                 $("#myTable > tbody").html("");
                 $('#select-all').prop('checked', false);
                 for(var i=0;i<response.length;i++){

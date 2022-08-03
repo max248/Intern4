@@ -74,8 +74,6 @@ public class AppController {
 
     @PostMapping("/block")
     public void blockUser(Authentication authentication, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
         if(authentication != null && authentication.isAuthenticated()){
             CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
             if(!userRepository.findByEmail(customUserDetails.getUsername()).isEnabled()){
@@ -85,11 +83,23 @@ public class AppController {
             }
             String block_ids = request.getParameter("id");
             boolean flag = Boolean.parseBoolean(request.getParameter("flag"));
+            boolean isUser=false;
             for (String id:block_ids.split(",")){
+                if(customUserDetails.getUserId() == Long.valueOf(id)){
+                    isUser = true;
+                }
                 userRepository.updateStatusById(Long.valueOf(id), flag);
+            }
+            if(isUser){
+                userRepository.updateStatusById(customUserDetails.getUserId(),flag);
+                response.setContentType("text/html");
+                response.getWriter().write("login");
+                return;
             }
             List<User> userList = userRepository.findAll();
             Gson gson = new Gson();
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
             response.getWriter().write(gson.toJson(userList));
         } else {
             response.setContentType("text/html");
@@ -131,8 +141,8 @@ public class AppController {
     public String processRegistration(User user, Model model){
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if(userRepository.findByEmail(user.getEmail()) != null){
-            model.addAttribute("errorMsg", "Email already exists !!!");
-            return "login";
+            model.addAttribute("errorMsg1", "Email already exists !!!");
+            return "signup_form";
         }
         user.setPassword(encoder.encode(user.getPassword()));
         user.setEnabled(true);

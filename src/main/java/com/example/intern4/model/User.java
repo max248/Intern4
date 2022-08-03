@@ -31,8 +31,6 @@ public class User {
     @Column
     private boolean enabled;
 
-    private String fullName;
-
     public String getFullName() {
         return firstName + " " + lastName;
     }
