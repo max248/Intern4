@@ -130,7 +130,7 @@ public class AppController {
             if(!authentication.isAuthenticated()){
                 response.setContentType("text/html");
                 response.setCharacterEncoding("UTF-8");
-                response.getWriter().write("logout");
+                response.getWriter().write("login");
             } else {
                 List<User> userList = userRepository.findAll();
                 Gson gson = new Gson();
@@ -138,7 +138,7 @@ public class AppController {
             }
         } else {
             response.setContentType("text/html");
-            response.getWriter().write("logout");
+            response.getWriter().write("login");
         }
     }
 
