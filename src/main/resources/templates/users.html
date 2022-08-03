@@ -110,7 +110,6 @@
             type: "POST",
             data: data,
             success: function (response){
-                console.log("response: " + response);
                 if(response == 'login'){
                     window.location.href = "/login";
                     return;
@@ -146,7 +145,6 @@
             type: "POST",
             data: data,
             success: function (response){
-                console.log("response: " + response);
                 if(response == 'login'){
                     window.location.href = "/login";
                     return;
@@ -182,7 +180,7 @@
             type: "POST",
             data: data,
             success: function (response){
-                if(response == 'logout'){
+                if(response == 'login'){
                     window.location.href = "/login";
                 } else {
                     $("#myTable > tbody").html("");
