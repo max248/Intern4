@@ -85,7 +85,6 @@
 <script>
     $('#select-all').click(function(event) {
         if(this.checked) {
-            // Iterate each checkbox
             $(':checkbox').each(function() {
                 if(!this.disabled){
                     this.checked = true;
