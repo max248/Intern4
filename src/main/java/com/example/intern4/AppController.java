@@ -90,7 +90,7 @@ public class AppController {
                 }
                 userRepository.updateStatusById(Long.valueOf(id), flag);
             }
-            if(isUser){
+            if(isUser && !flag){
                 userRepository.updateStatusById(customUserDetails.getUserId(),flag);
                 response.setContentType("text/html");
                 response.getWriter().write("login");
