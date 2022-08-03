@@ -23,7 +23,7 @@ public class AppController {
     @Autowired
     private UserRepository userRepository;
 
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @GetMapping("/login")
     public String loginPage(Model model, String error, String logout){
